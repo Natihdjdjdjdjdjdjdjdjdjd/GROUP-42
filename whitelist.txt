@@ -1,0 +1,83 @@
+# School Device Monitor - Whitelist
+# One process name per line (lowercase)
+# Lines starting with # are comments
+
+# Windows System Processes
+explorer.exe
+winlogon.exe
+lsass.exe
+services.exe
+svchost.exe
+wininit.exe
+csrss.exe
+conhost.exe
+dwm.exe
+taskmgr.exe
+cmd.exe
+powershell.exe
+regedit.exe
+msconfig.exe
+control.exe
+calc.exe
+notepad.exe
+wordpad.exe
+mspaint.exe
+snippingtool.exe
+
+# Web Browsers
+chrome.exe
+firefox.exe
+msedge.exe
+iexplore.exe
+opera.exe
+
+# Microsoft Office
+word.exe
+excel.exe
+powerpnt.exe
+outlook.exe
+onenote.exe
+access.exe
+publisher.exe
+visio.exe
+project.exe
+
+# Communication Tools
+teams.exe
+zoom.exe
+skype.exe
+discord.exe
+slack.exe
+whatsapp.exe
+
+# Development Tools
+code.exe
+notepad++.exe
+sublime_text.exe
+atom.exe
+pycharm64.exe
+intellij64.exe
+eclipse.exe
+visualstudio.exe
+
+# Media Players
+vlc.exe
+windowsmediaplayer.exe
+spotify.exe
+itunes.exe
+quicktime.exe
+
+# Security Software
+windowsdefender.exe
+mcafee.exe
+norton.exe
+avg.exe
+avast.exe
+
+# File Management
+winrar.exe
+7zfm.exe
+winzip.exe
+adobe.exe
+acrobat.exe
+reader.exe

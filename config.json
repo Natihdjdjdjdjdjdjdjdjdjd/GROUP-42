@@ -1,0 +1,47 @@
+{
+  "poll_seconds": 5,
+  "enable_toast": true,
+  "enable_email": false,
+  "enable_process_termination": false,
+  "enable_hash_verification": false,
+  "email_settings": {
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "username": "",
+    "password": "",
+    "to_email": "",
+    "from_email": ""
+  },
+  "alert_levels": {
+    "critical_processes": [
+      "cmd.exe",
+      "powershell.exe",
+      "regedit.exe",
+      "taskmgr.exe",
+      "msconfig.exe"
+    ],
+    "warning_processes": [
+      "notepad.exe",
+      "calc.exe",
+      "mspaint.exe"
+    ],
+    "info_processes": []
+  },
+  "alert_frequency": {
+    "max_alerts_per_hour": 10,
+    "suppress_duplicates_minutes": 5
+  },
+  "termination_settings": {
+    "terminate_critical": true,
+    "terminate_warning": false,
+    "terminate_info": false,
+    "grace_period_seconds": 30
+  },
+  "database_settings": {
+    "max_days_to_keep": 30,
+    "cleanup_interval_hours": 24
+  }
+}
+
+
+

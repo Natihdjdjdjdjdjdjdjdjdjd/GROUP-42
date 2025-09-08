@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Device Monitor - Security Dashboard</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- SweetAlert2 for better alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-color: #0f3460;
+            --success-color: #00d4aa;
+            --warning-color: #ffa726;
+            --danger-color: #ff4757;
+            --info-color: #3742fa;
+            --text-primary: #ffffff;
+            --text-secondary: #b8c5d6;
+            --text-muted: #8892b0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.4);
+            --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --border-radius: 16px;
+            --border-radius-sm: 12px;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+            --gradient-warning: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
+            --gradient-danger: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+            --gradient-info: linear-gradient(135deg, #3742fa 0%, #2f3542 100%);
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(1deg); }
+        }
+
+        /* Professional Navbar */
+        .navbar {
+            background: rgba(26, 26, 46, 0.8) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: var(--shadow-soft);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-brand i {
+            margin-right: 0.5rem;
+            color: #667eea;
+        }
+
+        /* Enhanced Stat Cards */
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+            height: 140px;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-success);
+        }
+
+        .stat-card.success::before {
+            background: var(--gradient-success);
+        }
+
+        .stat-card.warning::before {
+            background: var(--gradient-warning);
+        }
+
+        .stat-card.danger::before {
+            background: var(--gradient-danger);
+        }
+
+        .stat-card.info::before {
+            background: var(--gradient-info);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-medium);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            background: var(--gradient-success);
+            box-shadow: 0 8px 25px rgba(0, 212, 170, 0.3);
+        }
+
+        .stat-icon.success {
+            background: var(--gradient-success);
+            box-shadow: 0 8px 25px rgba(0, 212, 170, 0.3);
+        }
+
+        .stat-icon.warning {
+            background: var(--gradient-warning);
+            box-shadow: 0 8px 25px rgba(255, 167, 38, 0.3);
+        }
+
+        .stat-icon.danger {
+            background: var(--gradient-danger);
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3);
+        }
+
+        .stat-icon.info {
+            background: var(--gradient-info);
+            box-shadow: 0 8px 25px rgba(55, 66, 250, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+            line-height: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        /* Professional Table Styling */
+        .table-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .table-container:hover {
+            box-shadow: var(--shadow-medium);
+        }
+
+        .table {
+            margin-bottom: 0;
+            color: var(--text-primary);
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-primary);
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding: 1.2rem 1rem;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.01);
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        /* Professional Badge Styling */
+        .badge {
+            font-weight: 600;
+            padding: 0.6rem 1rem;
+            border-radius: var(--border-radius-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge.bg-success {
+            background: var(--gradient-success) !important;
+        }
+
+        .badge.bg-warning {
+            background: var(--gradient-warning) !important;
+            color: #1a1a2e;
+        }
+
+        .badge.bg-danger {
+            background: var(--gradient-danger) !important;
+        }
+
+        .badge.bg-info {
+            background: var(--gradient-info) !important;
+        }
+
+        .badge.bg-secondary {
+            background: linear-gradient(135deg, #8892b0 0%, #6c757d 100%) !important;
+        }
+
+        /* Professional Button Styling */
+        .btn {
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            padding: 0.7rem 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4c93 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: var(--gradient-danger);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #ff3742 0%, #ff2e3a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-outline-primary {
+            color: var(--text-primary);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Professional Alert Styling */
+        .alert {
+            border-radius: var(--border-radius-sm);
+            border: none;
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+        }
+
+        .alert-success {
+            background: rgba(0, 212, 170, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-danger {
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+
+        /* Professional Loading Animation */
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Glow Effects */
+        .glow {
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .glow:hover {
+            box-shadow: 0 0 40px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .stat-number {
+                font-size: 2.2rem;
+            }
+            
+            .stat-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stat-card {
+                height: 120px;
+                margin-bottom: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .stat-label {
+                font-size: 0.75rem;
+            }
+            
+            .table {
+                font-size: 0.85rem;
+            }
+            
+            .table thead th {
+                padding: 0.8rem 0.5rem;
+                font-size: 0.7rem;
+            }
+            
+            .table tbody td {
+                padding: 0.8rem 0.5rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.8rem;
+            }
+            
+            .badge {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container-fluid {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .stat-card {
+                height: 100px;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .stat-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4c93 100%);
+        }
+
+        /* Container adjustments */
+        .container-fluid {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Card body padding adjustments */
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Table responsive improvements */
+        .table-responsive {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Compact layout for better space usage */
+        .row {
+            margin-left: -0.75rem;
+            margin-right: -0.75rem;
+        }
+
+        .col-lg-3, .col-md-6, .col-12 {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-shield-alt"></i>
+                School Device Monitor
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white">
+                    <i class="fas fa-clock me-2"></i>
+                    <span id="current-time"></span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <!-- Statistics Cards -->
+        <div class="row mb-4" data-aos="fade-up">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stat-card success floating">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="stat-icon success me-3">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div>
+                            <h3 class="stat-number" id="total-events">0</h3>
+                            <p class="stat-label">Total Events</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stat-card danger floating">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="stat-icon danger me-3">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div>
+                            <h3 class="stat-number" id="unauthorized-count">0</h3>
+                            <p class="stat-label">Unauthorized</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stat-card warning floating">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="stat-icon warning me-3">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h3 class="stat-number" id="today-events">0</h3>
+                            <p class="stat-label">Today's Events</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="stat-card info floating">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="stat-icon info me-3">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h3 class="stat-number" id="unique-users">0</h3>
+                            <p class="stat-label">Unique Users</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Events Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="table-container glow" data-aos="fade-up">
+                    <div class="card-header" style="background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);">
+                        <h5 class="mb-0 text-white">
+                            <i class="fas fa-list me-2"></i>
+                            Recent Events
+                        </h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Process</th>
+                                    <th>User</th>
+                                    <th>Status</th>
+                                    <th>Alert Level</th>
+                                </tr>
+                            </thead>
+                            <tbody id="events-table-body">
+                                <tr>
+                                    <td colspan="5" class="text-center text-white">
+                                        <div class="loading-spinner mx-auto mb-2"></div>
+                                        Loading events...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Unauthorized Processes -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="table-container glow" data-aos="fade-up">
+                    <div class="card-header" style="background: var(--gradient-danger);">
+                        <h5 class="mb-0 text-white">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Active Unauthorized Processes
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="running-processes-container">
+                            <div class="text-center text-white">
+                                <div class="loading-spinner mx-auto mb-3"></div>
+                                <p>Loading active processes...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString();
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Load statistics
+        function loadStats() {
+            fetch('/api/stats')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('total-events').textContent = data.total_events || 0;
+                    document.getElementById('unauthorized-count').textContent = data.unauthorized_count || 0;
+                    document.getElementById('today-events').textContent = data.today_events || 0;
+                    document.getElementById('unique-users').textContent = data.unique_users || 0;
+                })
+                .catch(error => console.error('Error loading stats:', error));
+        }
+
+        // Load recent events
+        function loadEvents() {
+            fetch('/api/events?per_page=10')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('events-table-body');
+                    if (data.events && data.events.length > 0) {
+                        tbody.innerHTML = data.events.map(event => `
+                            <tr>
+                                <td>${new Date(event.timestamp).toLocaleString()}</td>
+                                <td><strong>${event.process_name}</strong></td>
+                                <td>${event.user}</td>
+                                <td><span class="badge bg-${getStatusColor(event.status)}">${event.status}</span></td>
+                                <td><span class="badge bg-${getAlertColor(event.alert_level)}">${event.alert_level}</span></td>
+                            </tr>
+                        `).join('');
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-white">No events found</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('events-table-body').innerHTML = 
+                        '<tr><td colspan="5" class="text-center text-danger">Error loading events</td></tr>';
+                });
+        }
+
+        function getStatusColor(status) {
+            switch(status.toLowerCase()) {
+                case 'detected': return 'info';
+                case 'terminated': return 'success';
+                case 'blocked': return 'danger';
+                default: return 'secondary';
+            }
+        }
+
+        function getAlertColor(level) {
+            switch(level.toLowerCase()) {
+                case 'info': return 'info';
+                case 'warning': return 'warning';
+                case 'critical': return 'danger';
+                default: return 'secondary';
+            }
+        }
+
+        // Enhanced termination functions
+        function terminateProcess(pid, processName) {
+            Swal.fire({
+                title: 'Terminate Process?',
+                html: `
+                    <div class="text-left">
+                        <p><strong>Process:</strong> ${processName}</p>
+                        <p><strong>PID:</strong> ${pid}</p>
+                        <p class="text-warning">This action cannot be undone!</p>
+                    </div>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff4757',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Terminate!',
+                cancelButtonText: 'Cancel',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch('/api/terminate_process', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            pid: pid, 
+                            process_name: processName 
+                        })
+                    })
+                    .then(response => response.json())
+                    .catch(error => {
+                        Swal.showValidationMessage(`Request failed: ${error}`)
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const data = result.value;
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Process Terminated!',
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        loadRunningProcesses(); // Refresh the list
+                        loadStats(); // Refresh stats
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Termination Failed',
+                            text: data.message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        }
+
+        function terminateMultipleProcesses() {
+            const checkboxes = document.querySelectorAll('.process-checkbox:checked');
+            const pids = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            
+            if (pids.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Processes Selected',
+                    text: 'Please select processes to terminate.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            
+            Swal.fire({
+                title: 'Terminate Multiple Processes?',
+                html: `
+                    <div class="text-left">
+                        <p><strong>Selected Processes:</strong> ${pids.length}</p>
+                        <p class="text-warning">This will terminate all selected processes!</p>
+                    </div>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff4757',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Terminate All!',
+                cancelButtonText: 'Cancel',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch('/api/terminate_multiple', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ pids: pids })
+                    })
+                    .then(response => response.json())
+                    .catch(error => {
+                        Swal.showValidationMessage(`Request failed: ${error}`)
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const data = result.value;
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Processes Terminated!',
+                            html: `
+                                <p>Successfully terminated ${data.successful} out of ${data.total_attempted} processes.</p>
+                                <div class="text-left mt-3">
+                                    ${data.results.map(r => `
+                                        <div class="mb-1">
+                                            <small class="${r.success ? 'text-success' : 'text-danger'}">
+                                                PID ${r.pid}: ${r.message}
+                                            </small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `,
+                            confirmButtonText: 'OK'
+                        });
+                        loadRunningProcesses(); // Refresh the list
+                        loadStats(); // Refresh stats
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Termination Failed',
+                            text: data.message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        }
+
+        function showProcessDetails(pid, processName) {
+            fetch(`/api/process_details/${pid}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const proc = data.process;
+                        Swal.fire({
+                            title: `Process Details: ${processName}`,
+                            html: `
+                                <div class="text-left">
+                                    <p><strong>PID:</strong> ${proc.pid}</p>
+                                    <p><strong>Name:</strong> ${proc.name}</p>
+                                    <p><strong>Path:</strong> ${proc.exe || 'Unknown'}</p>
+                                    <p><strong>User:</strong> ${proc.username}</p>
+                                    <p><strong>Memory:</strong> ${proc.memory_mb} MB</p>
+                                    <p><strong>CPU:</strong> ${proc.cpu_percent}%</p>
+                                    <p><strong>Status:</strong> ${proc.status}</p>
+                                    <p><strong>Threads:</strong> ${proc.num_threads}</p>
+                                    <p><strong>Created:</strong> ${proc.create_time}</p>
+                                    <p><strong>Command:</strong> ${proc.cmdline}</p>
+                                </div>
+                            `,
+                            width: '600px',
+                            confirmButtonText: 'Close'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: `Failed to load process details: ${error.message}`,
+                        confirmButtonText: 'OK'
+                    });
+                });
+        }
+
+        // Enhanced load running processes function
+        function loadRunningProcesses() {
+            fetch('/api/running_processes')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('running-processes-container');
+                    
+                    if (data.success) {
+                        if (data.processes.length === 0) {
+                            container.innerHTML = `
+                                <div class="text-center text-white">
+                                    <i class="fas fa-check-circle fa-3x mb-3" style="color: #00d4aa;"></i>
+                                    <h5>No unauthorized processes running!</h5>
+                                    <p class="text-white-50">All processes are whitelisted.</p>
+                                </div>
+                            `;
+                        } else {
+                            let html = `
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <h6 class="mb-0 text-white">Found ${data.count} unauthorized processes</h6>
+                                        <small class="text-white-50">Last updated: ${new Date(data.timestamp).toLocaleString()}</small>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-outline-primary me-2" onclick="loadRunningProcesses()">
+                                            <i class="fas fa-sync-alt"></i> Refresh
+                                        </button>
+                                        <button class="btn btn-danger" onclick="terminateMultipleProcesses()">
+                                            <i class="fas fa-trash"></i> Terminate Selected
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" id="select-all" onchange="toggleSelectAll()">
+                                                </th>
+                                                <th>Process Name</th>
+                                                <th>PID</th>
+                                                <th>User</th>
+                                                <th>Memory (MB)</th>
+                                                <th>CPU %</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                            `;
+                            
+                            data.processes.forEach(proc => {
+                                html += `
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" class="process-checkbox" value="${proc.pid}">
+                                        </td>
+                                        <td>
+                                            <strong class="text-red">${proc.name}</strong>
+                                            <br><small class="text-white-50">${proc.path}</small>
+                                        </td>
+                                        <td><code class="text-white">${proc.pid}</code></td>
+                                        <td class="text-white">${proc.username}</td>
+                                        <td class="text-white">${proc.memory_mb}</td>
+                                        <td class="text-white">${proc.cpu_percent}</td>
+                                        <td>
+                                            <span class="badge bg-${proc.status === 'running' ? 'success' : 'warning'}">
+                                                ${proc.status}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-info btn-sm" onclick="showProcessDetails(${proc.pid}, '${proc.name}')" title="View Details">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm" onclick="terminateProcess(${proc.pid}, '${proc.name}')" title="Terminate">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                            
+                            html += `
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
+                            
+                            container.innerHTML = html;
+                        }
+                    } else {
+                        container.innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Error loading processes: ${data.message}
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('running-processes-container').innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Error: ${error.message}
+                        </div>
+                    `;
+                });
+        }
+
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('select-all');
+            const checkboxes = document.querySelectorAll('.process-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+            loadEvents();
+            loadRunningProcesses();
+            
+            // Refresh data every 30 seconds
+            setInterval(() => {
+                loadStats();
+                loadEvents();
+                loadRunningProcesses();
+            }, 30000);
+        });
+    </script>
+</body>
+</html>
